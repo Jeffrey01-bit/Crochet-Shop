@@ -1,0 +1,29 @@
+.product-section {
+    padding: 6rem 0;
+    background: var(--bg-color);
+}
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2.5rem;
+    margin-bottom: 4rem;
+}
+
+.view-all-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.view-all-btn {
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+}
+
+@media (max-width: 768px) {
+    .product-grid {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 1.5rem;
+    }
+}
