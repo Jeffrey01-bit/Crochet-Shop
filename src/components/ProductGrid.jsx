@@ -1,15 +1,7 @@
 import React from 'react';
 import ProductCard from './ProductCard';
+import { products } from '../data/products';
 import './ProductGrid.css';
-
-const products = [
-    { id: 1, name: 'Daisy Dream Cardigan', price: 85.00 },
-    { id: 2, name: 'Sunset Gradient Top', price: 45.00 },
-    { id: 3, name: 'Ocean Breeze Vest', price: 65.00 },
-    { id: 4, name: 'Cozy Cloud Sweater', price: 95.00 },
-    { id: 5, name: 'Lavender Lace Skirt', price: 75.00 },
-    { id: 6, name: 'Bloom Bucket Hat', price: 35.00 },
-];
 
 const ProductGrid = () => {
     return (
