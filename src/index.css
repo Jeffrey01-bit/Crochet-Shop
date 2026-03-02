@@ -12,9 +12,9 @@
   --gradient-accent: linear-gradient(135deg, #f0c5bd 0%, #e5a498 100%);
 
   /* Glassmorphism */
-  --glass-bg: rgba(255, 255, 255, 0.7);
-  --glass-border: rgba(255, 255, 255, 0.5);
-  --glass-shadow: 0 8px 32px 0 rgba(132, 114, 107, 0.15);
+  --glass-bg: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(255, 255, 255, 0.6);
+  --glass-shadow: 0 4px 16px 0 rgba(132, 114, 107, 0.1);
 
   /* Typography */
   --font-heading: 'Outfit', sans-serif;
@@ -84,14 +84,12 @@ img {
 
 .glass-panel {
   background: var(--glass-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--glass-border);
   box-shadow: var(--glass-shadow);
   border-radius: var(--border-radius-lg);
   transform: translateZ(0);
   /* Hardware acceleration */
-  will-change: transform, box-shadow;
+  will-change: transform;
 }
 
 .btn-primary {
