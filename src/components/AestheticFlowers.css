@@ -1,0 +1,29 @@
+.flowers-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: -2;
+    overflow: hidden;
+}
+
+.flower {
+    position: absolute;
+    animation: float-flower 12s infinite ease-in-out alternate;
+}
+
+@keyframes float-flower {
+    0% {
+        transform: translateY(0) rotate(var(--base-rotate)) scale(1);
+    }
+
+    50% {
+        transform: translateY(-20px) rotate(calc(var(--base-rotate) + 5deg)) scale(1.05);
+    }
+
+    100% {
+        transform: translateY(10px) rotate(calc(var(--base-rotate) - 5deg)) scale(0.95);
+    }
+}
