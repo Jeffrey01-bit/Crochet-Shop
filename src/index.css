@@ -7,19 +7,19 @@
   --text-secondary: #7a7671;
   --accent-color: #e5a498;
   --accent-hover: #d28c7f;
-  
+
   --gradient-bg: linear-gradient(135deg, #fdfbf7 0%, #f3ece5 100%);
   --gradient-accent: linear-gradient(135deg, #f0c5bd 0%, #e5a498 100%);
-  
+
   /* Glassmorphism */
   --glass-bg: rgba(255, 255, 255, 0.7);
   --glass-border: rgba(255, 255, 255, 0.5);
   --glass-shadow: 0 8px 32px 0 rgba(132, 114, 107, 0.15);
-  
+
   /* Typography */
   --font-heading: 'Outfit', sans-serif;
   --font-body: 'Inter', sans-serif;
-  
+
   /* Layout */
   --border-radius-lg: 24px;
   --border-radius-md: 16px;
@@ -44,7 +44,12 @@ body {
   min-height: 100vh;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-heading);
   font-weight: 500;
   color: var(--text-primary);
@@ -84,6 +89,9 @@ img {
   border: 1px solid var(--glass-border);
   box-shadow: var(--glass-shadow);
   border-radius: var(--border-radius-lg);
+  transform: translateZ(0);
+  /* Hardware acceleration */
+  will-change: transform, box-shadow;
 }
 
 .btn-primary {
