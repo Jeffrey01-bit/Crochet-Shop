@@ -11,20 +11,5 @@
 
 .flower {
     position: absolute;
-    animation: float-flower 12s infinite ease-in-out alternate;
-    will-change: transform;
-}
-
-@keyframes float-flower {
-    0% {
-        transform: translate3d(0, 0, 0) rotate(var(--base-rotate)) scale(1);
-    }
-
-    50% {
-        transform: translate3d(0, -20px, 0) rotate(calc(var(--base-rotate) + 5deg)) scale(1.05);
-    }
-
-    100% {
-        transform: translate3d(0, 10px, 0) rotate(calc(var(--base-rotate) - 5deg)) scale(0.95);
-    }
+    /* Animations removed for maximum performance */
 }
