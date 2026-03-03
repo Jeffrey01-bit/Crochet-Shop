@@ -18,11 +18,13 @@ const Signup = () => {
         setError('');
 
         if (password !== confirmPassword) {
-            return setError('Passwords do not match');
+            setError('Passwords do not match');
+            return;
         }
 
         if (password.length < 6) {
-            return setError('Password must be at least 6 characters');
+            setError('Password must be at least 6 characters');
+            return;
         }
 
         setLoading(true);
