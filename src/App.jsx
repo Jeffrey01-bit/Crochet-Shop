@@ -6,6 +6,9 @@ import ProductGrid from './components/ProductGrid';
 import Footer from './components/Footer';
 import AestheticFlowers from './components/AestheticFlowers';
 import ProductDetails from './components/ProductDetails';
+import Contact from './components/Contact';
+import Login from './components/Login';
+import Signup from './components/Signup';
 
 function App() {
   return (
@@ -18,9 +21,12 @@ function App() {
             <>
               <Hero />
               <ProductGrid />
+              <Contact />
             </>
           } />
           <Route path="/product/:id" element={<ProductDetails />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
         </Routes>
       </main>
       <Footer />

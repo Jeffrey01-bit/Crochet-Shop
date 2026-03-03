@@ -19,8 +19,8 @@ const Hero = () => {
                         Discover our collection of unique, aesthetic, and fully handmade crochet clothing designed for the modern woman.
                     </p>
                     <div className="hero-cta">
-                        <button className="btn-primary">Explore Collection</button>
-                        <button className="btn-secondary">Learn Our Story</button>
+                        <a href="#shop" className="btn-primary" style={{ textDecoration: 'none' }}>Explore Collection</a>
+                        <a href="#about" className="btn-secondary" style={{ textDecoration: 'none', display: 'inline-block' }}>Learn Our Story</a>
                     </div>
                 </div>
                 <div className="hero-image-wrapper">
