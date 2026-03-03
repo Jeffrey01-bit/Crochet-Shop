@@ -10,13 +10,13 @@ const Contact = () => {
         e.preventDefault();
         setStatus('sending');
 
-        // Note: Missing Template ID and Public API Key from user
+        // API Keys provided by user
         emailjs
             .sendForm(
-                'service_9umcsq9', // User provided Service ID
-                'YOUR_TEMPLATE_ID', // TODO: Get Template ID from user
+                'service_9umcsq9',
+                'template_u3lo5du',
                 form.current,
-                { publicKey: 'YOUR_PUBLIC_KEY' } // TODO: Get Public Key from user
+                { publicKey: 'kGADPq5voj1YnwqtF' }
             )
             .then(
                 () => {

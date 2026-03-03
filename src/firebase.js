@@ -3,7 +3,7 @@ import { getAuth } from "firebase/auth";
 
 // TODO: Replace these placeholders with the actual config values from the user's project
 const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
+    apiKey: "AIzaSyAziJf0ITjnoY5XtHr1SERqRVkeF7Fjkhs",
     authDomain: "project-328991118467.firebaseapp.com",
     projectId: "project-328991118467",
     storageBucket: "project-328991118467.firebasestorage.app",
