@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import { auth } from '../firebase';
 import './Auth.css';
 
@@ -9,7 +9,15 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    const [successMessage, setSuccessMessage] = useState('');
     const navigate = useNavigate();
+    const location = useLocation();
+
+    useEffect(() => {
+        if (location.state?.message) {
+            setSuccessMessage(location.state.message);
+        }
+    }, [location]);
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -17,7 +25,14 @@ const Login = () => {
         setLoading(true);
 
         try {
-            await signInWithEmailAndPassword(auth, email, password);
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+
+            if (!userCredential.user.emailVerified) {
+                await signOut(auth);
+                setError('Please verify your email address before logging in. Check your inbox (or spam folder) for the verification link.');
+                return;
+            }
+
             navigate('/');
         } catch (err) {
             console.error(err);
@@ -41,6 +56,7 @@ const Login = () => {
                     <p>Enter your details to access your account.</p>
                 </div>
 
+                {successMessage && <div className="auth-status success">{successMessage}</div>}
                 {error && <div className="auth-error">{error}</div>}
 
                 <form onSubmit={handleLogin} className="auth-form">

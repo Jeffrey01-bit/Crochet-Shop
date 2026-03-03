@@ -50,9 +50,9 @@ const Navbar = () => {
 
                     {user ? (
                         <div className="user-menu" style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-                            <span className="user-name" style={{ fontSize: '0.9rem', fontWeight: 500 }}>
+                            <Link to="/profile" className="user-name" style={{ fontSize: '0.9rem', fontWeight: 500, color: 'var(--text-primary)', textDecoration: 'none', transition: 'var(--transition-smooth)' }} title="Go to Profile">
                                 {user.displayName || user.email.split('@')[0]}
-                            </span>
+                            </Link>
                             <button onClick={handleLogout} className="icon-btn" aria-label="Log out" title="Log out">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" y1="12" x2="9" y2="12" /></svg>
                             </button>

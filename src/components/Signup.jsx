@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { createUserWithEmailAndPassword, updateProfile, sendEmailVerification, signOut } from 'firebase/auth';
 import { auth } from '../firebase';
 import './Auth.css';
 
@@ -32,7 +32,16 @@ const Signup = () => {
         try {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             await updateProfile(userCredential.user, { displayName: name });
-            navigate('/');
+
+            // Send email verification
+            await sendEmailVerification(userCredential.user);
+
+            // Immediately sign them out until they verify
+            await signOut(auth);
+
+            // Navigate them to login with a success message
+            navigate('/login', { state: { message: 'Account created successfully! Please check your email to verify your account before logging in.' } });
+
         } catch (err) {
             console.error(err);
             if (err.code === 'auth/email-already-in-use') {

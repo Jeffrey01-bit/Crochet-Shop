@@ -42,6 +42,17 @@
     text-align: center;
 }
 
+.auth-status.success {
+    background: rgba(76, 175, 80, 0.1);
+    color: #2e7d32;
+    padding: 1rem;
+    border-radius: var(--border-radius-sm);
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    border: 1px solid rgba(76, 175, 80, 0.2);
+    text-align: center;
+}
+
 .auth-form {
     display: flex;
     flex-direction: column;
