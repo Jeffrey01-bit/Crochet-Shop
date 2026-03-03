@@ -4,11 +4,12 @@ import { getAuth } from "firebase/auth";
 // TODO: Replace these placeholders with the actual config values from the user's project
 const firebaseConfig = {
     apiKey: "AIzaSyAziJf0ITjnoY5XtHr1SERqRVkeF7Fjkhs",
-    authDomain: "project-328991118467.firebaseapp.com",
-    projectId: "project-328991118467",
-    storageBucket: "project-328991118467.firebasestorage.app",
-    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-    appId: "YOUR_APP_ID"
+    authDomain: "crochet-shop-b5fd3.firebaseapp.com",
+    projectId: "crochet-shop-b5fd3",
+    storageBucket: "crochet-shop-b5fd3.firebasestorage.app",
+    messagingSenderId: "328991118467",
+    appId: "1:328991118467:web:e40c0149237ecac2dcf7b6",
+    measurementId: "G-G3Q1Q2MTWW"
 };
 
 const app = initializeApp(firebaseConfig);
