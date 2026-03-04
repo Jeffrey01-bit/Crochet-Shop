@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import './Hero.css';
 
 const Hero = () => {
@@ -19,13 +20,13 @@ const Hero = () => {
                         Discover our collection of unique, aesthetic, and fully handmade crochet clothing designed for the modern woman.
                     </p>
                     <div className="hero-cta">
-                        <a href="#shop" className="btn-primary" style={{ textDecoration: 'none' }}>Explore Collection</a>
-                        <a href="#about" className="btn-secondary" style={{ textDecoration: 'none', display: 'inline-block' }}>Learn Our Story</a>
+                        <Link to="/shop" className="btn-primary" style={{ textDecoration: 'none' }}>Explore Collection</Link>
+                        <Link to="/about" className="btn-secondary" style={{ textDecoration: 'none', display: 'inline-block' }}>Learn Our Story</Link>
                     </div>
                 </div>
                 <div className="hero-image-wrapper">
                     <div className="glass-panel image-card">
-                        <img src="/hero-image.png" alt="Aesthetic Crochet Fashion" className="hero-product-image" />
+                        <img src="/Lander page wallpaper.jpg" alt="Aesthetic Crochet Fashion" className="hero-product-image" />
                     </div>
                 </div>
             </div>

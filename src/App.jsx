@@ -10,6 +10,9 @@ import Contact from './components/Contact';
 import Login from './components/Login';
 import Signup from './components/Signup';
 import Profile from './components/Profile';
+import About from './components/About';
+import Shop from './components/Shop';
+import Cart from './components/Cart';
 
 function App() {
   return (
@@ -26,6 +29,9 @@ function App() {
             </>
           } />
           <Route path="/product/:id" element={<ProductDetails />} />
+          <Route path="/shop" element={<Shop />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/cart" element={<Cart />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/profile" element={<Profile />} />

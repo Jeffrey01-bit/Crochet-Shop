@@ -1,12 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth } from '../firebase';
+import { useCart } from '../context/CartContext';
 import './Navbar.css';
 
 const Navbar = () => {
     const [scrolled, setScrolled] = useState(false);
     const [user, setUser] = useState(null);
+    const location = useLocation();
+
+    const handleHomeClick = () => {
+        if (location.pathname === '/') {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    };
+
+    const handleScrollToSection = (e, sectionId) => {
+        if (location.pathname === '/') {
+            e.preventDefault();
+            document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
 
     useEffect(() => {
         const handleScroll = () => {
@@ -23,6 +38,8 @@ const Navbar = () => {
         return () => unsubscribe();
     }, []);
 
+    const { cartCount } = useCart();
+
     const handleLogout = async () => {
         try {
             await signOut(auth);
@@ -38,10 +55,10 @@ const Navbar = () => {
                     Crochet Shop.
                 </Link>
                 <ul className="nav-links">
-                    <li><a href="/#home">Home</a></li>
-                    <li><a href="/#shop">Shop</a></li>
-                    <li><a href="/#about">About</a></li>
-                    <li><a href="/#contact">Contact</a></li>
+                    <li><Link to="/" onClick={handleHomeClick}>Home</Link></li>
+                    <li><Link to="/#latest" onClick={(e) => handleScrollToSection(e, 'latest')}>Shop</Link></li>
+                    <li><Link to="/about">About</Link></li>
+                    <li><a href="/#contact" onClick={(e) => handleScrollToSection(e, 'contact')}>Contact</a></li>
                 </ul>
                 <div className="nav-actions">
                     <button className="icon-btn search-btn" aria-label="Search">
@@ -63,10 +80,10 @@ const Navbar = () => {
                         </Link>
                     )}
 
-                    <button className="icon-btn cart-btn" aria-label="Cart">
+                    <Link to="/cart" className="icon-btn cart-btn" aria-label="Cart" title="Cart">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
-                        <span className="cart-count">2</span>
-                    </button>
+                        {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
+                    </Link>
                 </div>
             </div>
         </nav>

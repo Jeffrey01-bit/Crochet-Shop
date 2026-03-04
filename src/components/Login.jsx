@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import { signInWithEmailAndPassword, signOut, sendEmailVerification } from 'firebase/auth';
 import { auth } from '../firebase';
 import './Auth.css';
 
@@ -10,8 +10,21 @@ const Login = () => {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const [successMessage, setSuccessMessage] = useState('');
+    const [resendLoading, setResendLoading] = useState(false);
+    const [resendTimer, setResendTimer] = useState(0);
+    const [unverifiedUser, setUnverifiedUser] = useState(null);
     const navigate = useNavigate();
     const location = useLocation();
+
+    useEffect(() => {
+        let interval;
+        if (resendTimer > 0) {
+            interval = setInterval(() => {
+                setResendTimer((prev) => prev - 1);
+            }, 1000);
+        }
+        return () => clearInterval(interval);
+    }, [resendTimer]);
 
     useEffect(() => {
         if (location.state?.message) {
@@ -28,11 +41,13 @@ const Login = () => {
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
 
             if (!userCredential.user.emailVerified) {
+                setUnverifiedUser(userCredential.user);
                 await signOut(auth);
                 setError('Please verify your email address before logging in. Check your inbox (or spam folder) for the verification link.');
                 return;
             }
 
+            setUnverifiedUser(null);
             navigate('/');
         } catch (err) {
             console.error(err);
@@ -48,6 +63,27 @@ const Login = () => {
         }
     };
 
+    const handleResendEmail = async () => {
+        if (!unverifiedUser) return;
+        setResendLoading(true);
+        setError('');
+
+        try {
+            await sendEmailVerification(unverifiedUser);
+            setSuccessMessage('Verification email resent successfully! Please check your inbox and spam folder.');
+            setResendTimer(60); // 60 second cooldown
+        } catch (err) {
+            console.error(err);
+            if (err.code === 'auth/too-many-requests') {
+                setError('Too many requests. Please wait a moment before trying again.');
+            } else {
+                setError('Failed to resend verification email. Please try again later.');
+            }
+        } finally {
+            setResendLoading(false);
+        }
+    };
+
     return (
         <section className="auth-section">
             <div className="auth-container glass-panel">
@@ -57,7 +93,27 @@ const Login = () => {
                 </div>
 
                 {successMessage && <div className="auth-status success">{successMessage}</div>}
-                {error && <div className="auth-error">{error}</div>}
+
+                {error && (
+                    <div className="auth-error">
+                        {error}
+                        {unverifiedUser && (
+                            <div style={{ marginTop: '1rem', borderTop: '1px solid rgba(211, 47, 47, 0.2)', paddingTop: '1rem' }}>
+                                <p style={{ fontSize: '0.85rem', marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>
+                                    Link expired or missing?
+                                </p>
+                                <button
+                                    onClick={handleResendEmail}
+                                    className="btn-primary"
+                                    disabled={resendLoading || resendTimer > 0}
+                                    style={{ width: '100%', padding: '0.5rem', fontSize: '0.9rem', backgroundColor: resendTimer > 0 ? '#ccc' : '', cursor: resendTimer > 0 ? 'not-allowed' : 'pointer' }}
+                                >
+                                    {resendLoading ? 'Sending...' : resendTimer > 0 ? `Resend Available in ${resendTimer}s` : 'Resend Verification Email'}
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                )}
 
                 <form onSubmit={handleLogin} className="auth-form">
                     <div className="form-group">
