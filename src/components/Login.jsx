@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { signInWithEmailAndPassword, signOut, sendEmailVerification } from 'firebase/auth';
 import { auth } from '../firebase';
+import AlertWindow from './AlertWindow';
 import './Auth.css';
 
 const Login = () => {
@@ -86,32 +87,30 @@ const Login = () => {
 
     return (
         <section className="auth-section">
-            <div className="auth-container glass-panel">
+            <div className="auth-container">
                 <div className="auth-header">
                     <h2>Welcome Back</h2>
                     <p>Enter your details to access your account.</p>
                 </div>
 
-                {successMessage && <div className="auth-status success">{successMessage}</div>}
+                <AlertWindow message={successMessage} type="success" onClose={() => setSuccessMessage('')} />
+                <AlertWindow message={error} type="error" onClose={() => setError('')} />
 
-                {error && (
-                    <div className="auth-error">
-                        {error}
-                        {unverifiedUser && (
-                            <div style={{ marginTop: '1rem', borderTop: '1px solid rgba(211, 47, 47, 0.2)', paddingTop: '1rem' }}>
-                                <p style={{ fontSize: '0.85rem', marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>
-                                    Link expired or missing?
-                                </p>
-                                <button
-                                    onClick={handleResendEmail}
-                                    className="btn-primary"
-                                    disabled={resendLoading || resendTimer > 0}
-                                    style={{ width: '100%', padding: '0.5rem', fontSize: '0.9rem', backgroundColor: resendTimer > 0 ? '#ccc' : '', cursor: resendTimer > 0 ? 'not-allowed' : 'pointer' }}
-                                >
-                                    {resendLoading ? 'Sending...' : resendTimer > 0 ? `Resend Available in ${resendTimer}s` : 'Resend Verification Email'}
-                                </button>
-                            </div>
-                        )}
+                {error && unverifiedUser && (
+                    <div className="auth-error" style={{ background: 'transparent', border: 'none', padding: 0, marginTop: '-10px', boxShadow: 'none' }}>
+                        <div style={{ marginTop: '0', borderTop: 'none', paddingTop: '0' }}>
+                            <p style={{ fontSize: '0.85rem', marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>
+                                Link expired or missing?
+                            </p>
+                            <button
+                                onClick={handleResendEmail}
+                                className="btn-primary"
+                                disabled={resendLoading || resendTimer > 0}
+                                style={{ width: '100%', padding: '0.5rem', fontSize: '0.9rem', backgroundColor: resendTimer > 0 ? '#ccc' : '', cursor: resendTimer > 0 ? 'not-allowed' : 'pointer' }}
+                            >
+                                {resendLoading ? 'Sending...' : resendTimer > 0 ? `Resend available in ${resendTimer}s` : 'Resend Verification Email'}
+                            </button>
+                        </div>
                     </div>
                 )}
 

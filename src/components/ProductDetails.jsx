@@ -11,10 +11,7 @@ import './ProductDetails.css';
 const ProductDetails = () => {
     const { id } = useParams();
     const product = products.find(p => p.id === parseInt(id));
-    const [mainImage, setMainImage] = useState('');
     const [addStatus, setAddStatus] = useState('idle'); // 'idle' | 'loading' | 'added'
-    const [isLightboxOpen, setIsLightboxOpen] = useState(false);
-    const [lightboxIndex, setLightboxIndex] = useState(0);
     const [averageRating, setAverageRating] = useState(0);
     const [currentUser, setCurrentUser] = useState(null);
     const [totalRatings, setTotalRatings] = useState(0);
@@ -25,12 +22,25 @@ const ProductDetails = () => {
 
     const isProductInCart = product ? isInCart(product.id) : false;
 
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+
+    const handleNextImage = () => {
+        if (!product.images) return;
+        setCurrentImageIndex((prev) => (prev + 1) % product.images.length);
+    };
+
+    const handlePrevImage = () => {
+        if (!product.images) return;
+        setCurrentImageIndex((prev) => (prev - 1 + product.images.length) % product.images.length);
+    };
+
+    const displayImage = product.images && product.images.length > 0
+        ? product.images[currentImageIndex]
+        : product.image;
+
     useEffect(() => {
         window.scrollTo(0, 0); // Scroll to top on page load
-        if (product && product.images && product.images.length > 0) {
-            setMainImage(product.images[0]);
-            setLightboxIndex(0);
-        }
     }, [product]);
 
     useEffect(() => {
@@ -69,30 +79,7 @@ const ProductDetails = () => {
         return () => unsubscribeRatings();
     }, [product, currentUser]);
 
-    const openLightbox = (index = 0) => {
-        setLightboxIndex(index);
-        setIsLightboxOpen(true);
-        document.body.style.overflow = 'hidden'; // prevent scrolling when modal is open
-    };
 
-    const closeLightbox = () => {
-        setIsLightboxOpen(false);
-        document.body.style.overflow = 'auto';
-    };
-
-    const handleLightboxNext = (e) => {
-        e.stopPropagation();
-        if (product && product.images) {
-            setLightboxIndex((prev) => (prev + 1) % product.images.length);
-        }
-    };
-
-    const handleLightboxPrev = (e) => {
-        e.stopPropagation();
-        if (product && product.images) {
-            setLightboxIndex((prev) => (prev - 1 + product.images.length) % product.images.length);
-        }
-    };
 
     const handleAddToCart = async (e) => {
         e.preventDefault();
@@ -118,7 +105,7 @@ const ProductDetails = () => {
                 await setDoc(itemRef, {
                     name: product.name,
                     price: product.price,
-                    image: mainImage || product.image || '',
+                    image: product.image || (product.images && product.images.length > 0 ? product.images[0] : ''),
                     quantity: 1
                 });
             }
@@ -185,7 +172,7 @@ const ProductDetails = () => {
         return (
             <div className="star-rating" onMouseLeave={() => setHoverRating(0)} style={{ display: 'flex', alignItems: 'center' }}>
                 <span className="rating-text" style={{ marginRight: '12px', fontWeight: 'bold', fontSize: '1.1rem', color: 'var(--text-primary)' }}>
-                    {displayAvg} <span style={{ color: 'var(--accent-color)' }}>★</span>
+                    {displayAvg} <span style={{ color: '#FFA41C' }}>★</span>
                 </span>
 
                 <div style={{ display: 'flex' }}>
@@ -199,8 +186,8 @@ const ProductDetails = () => {
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="20" height="20"
                                 viewBox="0 0 24 24"
-                                fill={isFilled ? "var(--accent-color)" : "none"}
-                                stroke={isFilled ? "var(--accent-color)" : "#ccc"}
+                                fill={isFilled ? "#FFA41C" : "none"}
+                                stroke={isFilled ? "#FFA41C" : "#ccc"}
                                 strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
                                 className={`star-icon ${canRate ? 'interactive' : ''}`}
                                 onClick={() => canRate && handleRatingClick(star)}
@@ -234,32 +221,30 @@ const ProductDetails = () => {
                 </div>
 
                 <div className="product-details-grid">
-                    {/* Image Gallery Column */}
+                    {/* Image Gallery Column - Reverted to Carousel/Lightbox */}
                     <div className="product-gallery">
-                        <div className="main-image-container glass-panel" onClick={() => openLightbox(product.images ? product.images.indexOf(mainImage) : 0)}>
-                            {mainImage ? (
-                                <>
-                                    <img src={mainImage} alt={product.name} className="main-image" />
-                                    <div className="expand-hint">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" /></svg>
-                                    </div>
-                                </>
+                        <div className="main-image-container" onClick={() => setIsLightboxOpen(true)}>
+                            {displayImage ? (
+                                <img src={displayImage} alt={product.name} className="main-image" />
                             ) : (
                                 <div className="placeholder-image">Image not available</div>
                             )}
+                            {product.images && product.images.length > 1 && (
+                                <>
+                                    <button className="gallery-nav-btn prev" onClick={(e) => { e.stopPropagation(); handlePrevImage(); }}>❮</button>
+                                    <button className="gallery-nav-btn next" onClick={(e) => { e.stopPropagation(); handleNextImage(); }}>❯</button>
+                                </>
+                            )}
                         </div>
                         {product.images && product.images.length > 1 && (
-                            <div className="thumbnail-list">
+                            <div className="thumbnail-container">
                                 {product.images.map((img, index) => (
                                     <div
                                         key={index}
-                                        className={`thumbnail glass-panel ${mainImage === img ? 'active' : ''}`}
-                                        onClick={() => {
-                                            setMainImage(img);
-                                            setLightboxIndex(index);
-                                        }}
+                                        className={`thumbnail ${index === currentImageIndex ? 'active' : ''}`}
+                                        onClick={() => setCurrentImageIndex(index)}
                                     >
-                                        <img src={img} alt={`${product.name} view ${index + 1}`} />
+                                        <img src={img} alt={`${product.name} thumbnail ${index + 1}`} />
                                     </div>
                                 ))}
                             </div>
@@ -283,10 +268,19 @@ const ProductDetails = () => {
                         </div>
 
                         <div className="details-features">
-                            <ul>
-                                <li>✨ 100% Handmade with premium yarn</li>
-                                <li>🌿 Aesthetic, breathable and comfortable</li>
-                                <li>🎨 Unique artisanal design</li>
+                            <ul style={{ listStyleType: 'none', padding: 0 }}>
+                                <li style={{ marginBottom: '10px', display: 'flex', alignItems: 'center' }}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '12px', color: 'var(--text-secondary)' }}><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" /></svg>
+                                    100% Handmade with premium yarn
+                                </li>
+                                <li style={{ marginBottom: '10px', display: 'flex', alignItems: 'center' }}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '12px', color: 'var(--text-secondary)' }}><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12" /></svg>
+                                    Aesthetic, breathable and comfortable
+                                </li>
+                                <li style={{ marginBottom: '10px', display: 'flex', alignItems: 'center' }}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '12px', color: 'var(--text-secondary)' }}><circle cx="13.5" cy="6.5" r=".5" /><circle cx="17.5" cy="10.5" r=".5" /><circle cx="8.5" cy="7.5" r=".5" /><circle cx="6.5" cy="12.5" r=".5" /><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z" /></svg>
+                                    Unique artisanal design
+                                </li>
                             </ul>
                         </div>
 
@@ -335,49 +329,22 @@ const ProductDetails = () => {
 
             </div>
 
-            {/* Lightbox Modal */}
+            {/* Lightbox */}
             {isLightboxOpen && (
-                <div className="lightbox-overlay" onClick={closeLightbox}>
-                    <button className="lightbox-close" onClick={closeLightbox}>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                    </button>
-
+                <div className="lightbox-overlay" onClick={() => setIsLightboxOpen(false)}>
                     <div className="lightbox-content" onClick={e => e.stopPropagation()}>
-                        <div className="lightbox-image-wrapper">
-                            <img
-                                src={product.images ? product.images[lightboxIndex] : product.image}
-                                alt={`${product.name} full view`}
-                                className="lightbox-image"
-                            />
-
-                            {product.images && product.images.length > 1 && (
-                                <>
-                                    <button className="lightbox-btn prev" onClick={handleLightboxPrev}>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6" /></svg>
-                                    </button>
-                                    <button className="lightbox-btn next" onClick={handleLightboxNext}>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6" /></svg>
-                                    </button>
-                                </>
-                            )}
-                        </div>
-
+                        <button className="lightbox-close" onClick={() => setIsLightboxOpen(false)}>✕</button>
+                        <img src={displayImage} alt={product.name} className="lightbox-image" />
                         {product.images && product.images.length > 1 && (
-                            <div className="lightbox-thumbnails">
-                                {product.images.map((img, index) => (
-                                    <div
-                                        key={index}
-                                        className={`lightbox-thumbnail ${lightboxIndex === index ? 'active' : ''}`}
-                                        onClick={() => setLightboxIndex(index)}
-                                    >
-                                        <img src={img} alt={`Thumbnail ${index + 1}`} />
-                                    </div>
-                                ))}
-                            </div>
+                            <>
+                                <button className="lightbox-nav-btn prev" onClick={handlePrevImage}>❮</button>
+                                <button className="lightbox-nav-btn next" onClick={handleNextImage}>❯</button>
+                            </>
                         )}
                     </div>
                 </div>
             )}
+
         </section>
     );
 };

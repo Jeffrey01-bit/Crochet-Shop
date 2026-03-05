@@ -9,14 +9,18 @@ import ProductDetails from './components/ProductDetails';
 import Contact from './components/Contact';
 import Login from './components/Login';
 import Signup from './components/Signup';
-import Profile from './components/Profile';
+import Settings from './components/Settings';
+import Orders from './components/Orders';
 import About from './components/About';
 import Shop from './components/Shop';
 import Cart from './components/Cart';
+import SearchResults from './components/SearchResults';
+import ScrollToTop from './components/ScrollToTop';
 
 function App() {
   return (
     <div className="app">
+      <ScrollToTop />
       <AestheticFlowers />
       <Navbar />
       <main>
@@ -30,11 +34,13 @@ function App() {
           } />
           <Route path="/product/:id" element={<ProductDetails />} />
           <Route path="/shop" element={<Shop />} />
+          <Route path="/search" element={<SearchResults />} />
           <Route path="/about" element={<About />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/orders" element={<Orders />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/settings" element={<Settings />} />
         </Routes>
       </main>
       <Footer />

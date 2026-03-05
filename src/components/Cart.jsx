@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { collection, onSnapshot, doc, deleteDoc, updateDoc } from 'firebase/firestore';
+import { Link } from 'react-router-dom';
 import { db, auth } from '../firebase';
 import './Cart.css';
 
@@ -91,7 +92,7 @@ const Cart = () => {
                 <h1 className="page-title" style={{ marginTop: '40px', marginBottom: '30px' }}>Your Shopping Cart</h1>
 
                 {cartItems.length === 0 ? (
-                    <div className="cart-empty-container glass-panel">
+                    <div className="cart-empty-container">
                         <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-shopping-bag" style={{ color: 'var(--text-secondary)', marginBottom: '20px' }}><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" /><path d="M3 6h18" /><path d="M16 10a4 4 0 0 1-8 0" /></svg>
                         <h2>Your cart is empty</h2>
                         <p>Looks like you haven't added any beautiful handmade items yet.</p>
@@ -101,12 +102,12 @@ const Cart = () => {
                     <div className="cart-content">
                         <div className="cart-items-section">
                             {cartItems.map((item) => (
-                                <div key={item.id} className="cart-item glass-panel">
-                                    <div className="cart-item-image">
+                                <div key={item.id} className="cart-item">
+                                    <Link to={`/product/${item.id}`} className="cart-item-image">
                                         <img src={item.image} alt={item.name} />
-                                    </div>
+                                    </Link>
                                     <div className="cart-item-details">
-                                        <h3>{item.name}</h3>
+                                        <h3><Link to={`/product/${item.id}`} style={{ color: 'inherit', textDecoration: 'none' }}>{item.name}</Link></h3>
                                         <p className="cart-item-price">₹{item.price}</p>
                                     </div>
                                     <div className="cart-item-actions">
@@ -126,7 +127,7 @@ const Cart = () => {
                             ))}
                         </div>
 
-                        <div className="cart-summary-section glass-panel">
+                        <div className="cart-summary-section">
                             <h2>Order Summary</h2>
                             <div className="summary-row">
                                 <span>Subtotal</span>

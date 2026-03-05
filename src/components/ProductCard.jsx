@@ -142,36 +142,23 @@ const ProductCard = ({ product, showActions = false }) => {
                             <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-tag"><path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"></path><path d="M7 7h.01"></path></svg>
                         </div>
                     )}
+
+                    {showActions && (
+                        <div className="product-hover-actions">
+                            <button
+                                className={`quick-add-btn ${addStatus}`}
+                                onClick={handleAddToCart}
+                                disabled={isProductInCart || addStatus !== 'idle'}
+                            >
+                                {isProductInCart ? 'In Cart' : addStatus === 'loading' ? 'Adding...' : addStatus === 'added' ? 'Added' : 'Add to Cart'}
+                            </button>
+                        </div>
+                    )}
                 </div>
+
                 <div className="product-info">
                     <h3 className="product-name">{product.name}</h3>
                     <p className="product-price">₹{product.price}</p>
-                    {showActions && (
-                        <div className="product-actions">
-                            <button className="btn-primary buy-btn" onClick={(e) => { e.preventDefault(); console.log("Buy Now", product.id); }}>Buy Now</button>
-                            {isProductInCart ? (
-                                <button className="btn-secondary add-btn added" disabled>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '6px' }}><path d="M20 6 9 17l-5-5" /></svg>
-                                    Carted
-                                </button>
-                            ) : (
-                                <button
-                                    className={`btn-secondary add-btn ${addStatus}`}
-                                    onClick={handleAddToCart}
-                                    disabled={addStatus !== 'idle'}
-                                >
-                                    {addStatus === 'idle' && 'Add to Cart'}
-                                    {addStatus === 'loading' && <span className="spinner-mini"></span>}
-                                    {addStatus === 'added' && (
-                                        <>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '6px' }}><path d="M20 6 9 17l-5-5" /></svg>
-                                            Added
-                                        </>
-                                    )}
-                                </button>
-                            )}
-                        </div>
-                    )}
                 </div>
             </div>
         </Link>

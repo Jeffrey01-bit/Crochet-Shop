@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { createUserWithEmailAndPassword, updateProfile, sendEmailVerification, signOut } from 'firebase/auth';
 import { auth } from '../firebase';
+import AlertWindow from './AlertWindow';
 import './Auth.css';
 
 const Signup = () => {
@@ -58,13 +59,13 @@ const Signup = () => {
 
     return (
         <section className="auth-section">
-            <div className="auth-container glass-panel">
+            <div className="auth-container">
                 <div className="auth-header">
                     <h2>Create an Account</h2>
                     <p>Join us to track orders and save favorites.</p>
                 </div>
 
-                {error && <div className="auth-error">{error}</div>}
+                <AlertWindow message={error} type="error" onClose={() => setError('')} />
 
                 <form onSubmit={handleSignup} className="auth-form">
                     <div className="form-group">

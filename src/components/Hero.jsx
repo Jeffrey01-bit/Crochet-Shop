@@ -5,28 +5,17 @@ import './Hero.css';
 const Hero = () => {
     return (
         <section className="hero" id="home">
-            <div className="hero-background">
-                <div className="blob blob-1"></div>
-                <div className="blob blob-2"></div>
+            <div className="hero-background" style={{ backgroundImage: 'url("/Lander page wallpaper.jpg")' }}>
+                <div className="hero-overlay"></div>
             </div>
             <div className="container hero-container">
                 <div className="hero-content">
-                    <span className="hero-subtitle">Handmade with love</span>
                     <h1 className="hero-title">
-                        Wear poetry,<br />
-                        woven in <span className="highlight">crochet</span>.
+                        Handcrafted knitwear,<br />
+                        made mindfully.
                     </h1>
-                    <p className="hero-description">
-                        Discover our collection of unique, aesthetic, and fully handmade crochet clothing designed for the modern woman.
-                    </p>
                     <div className="hero-cta">
-                        <Link to="/shop" className="btn-primary" style={{ textDecoration: 'none' }}>Explore Collection</Link>
-                        <Link to="/about" className="btn-secondary" style={{ textDecoration: 'none', display: 'inline-block' }}>Learn Our Story</Link>
-                    </div>
-                </div>
-                <div className="hero-image-wrapper">
-                    <div className="glass-panel image-card">
-                        <img src="/Lander page wallpaper.jpg" alt="Aesthetic Crochet Fashion" className="hero-product-image" />
+                        <Link to="/shop" className="btn-primary" style={{ textDecoration: 'none' }}>Shop The Collection</Link>
                     </div>
                 </div>
             </div>

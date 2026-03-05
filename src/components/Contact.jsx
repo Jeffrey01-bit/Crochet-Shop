@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import emailjs from '@emailjs/browser';
+import AlertWindow from './AlertWindow';
 import './Contact.css';
 
 const Contact = () => {
@@ -53,7 +54,7 @@ const Contact = () => {
                     </div>
                 </div>
 
-                <div className="contact-form-wrapper glass-panel">
+                <div className="contact-form-wrapper">
                     <form ref={form} onSubmit={sendEmail} className="contact-form">
                         <div className="form-group">
                             <label htmlFor="user_name">Name</label>
@@ -71,16 +72,16 @@ const Contact = () => {
                             {status === 'sending' ? 'Sending...' : 'Send Message'}
                         </button>
 
-                        {status === 'success' && (
-                            <div className="form-status success">
-                                Message sent successfully! We will get back to you soon.
-                            </div>
-                        )}
-                        {status === 'error' && (
-                            <div className="form-status error">
-                                Failed to send message. Please ensure API keys are configured correctly or email augustinecrochet@gmail.com directly.
-                            </div>
-                        )}
+                        <AlertWindow
+                            message={status === 'success' ? 'Message sent successfully! We will get back to you soon.' : ''}
+                            type="success"
+                            onClose={() => setStatus('')}
+                        />
+                        <AlertWindow
+                            message={status === 'error' ? 'Failed to send message. Please try again.' : ''}
+                            type="error"
+                            onClose={() => setStatus('')}
+                        />
                     </form>
                 </div>
             </div>
