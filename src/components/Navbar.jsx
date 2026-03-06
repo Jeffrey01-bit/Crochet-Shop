@@ -11,6 +11,7 @@ const Navbar = () => {
     const [user, setUser] = useState(null);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [suggestions, setSuggestions] = useState([]);
     const location = useLocation();
@@ -57,10 +58,15 @@ const Navbar = () => {
     };
 
     const handleScrollToSection = (e, sectionId) => {
+        setIsMobileMenuOpen(false); // Close mobile menu if open
         if (location.pathname === '/') {
             e.preventDefault();
             document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
         }
+    };
+
+    const handleLinkClick = () => {
+        setIsMobileMenuOpen(false);
     };
 
     // Close settings dropdown when clicking outside
@@ -105,22 +111,35 @@ const Navbar = () => {
             <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
                 <div className="container nav-container" style={{ position: 'relative' }}>
 
-                    <ul className={`nav-links nav-item-fade ${isSearchOpen ? 'fade-out' : ''}`}>
-                        <li><Link to="/" onClick={handleHomeClick}>Home</Link></li>
+                    <ul className={`nav-links ${isMobileMenuOpen ? 'mobile-active' : ''} nav-item-fade ${isSearchOpen ? 'fade-out' : ''}`}>
+                        <li><Link to="/" onClick={() => { handleHomeClick(); handleLinkClick(); }}>Home</Link></li>
                         <li><Link to="/#latest" onClick={(e) => handleScrollToSection(e, 'latest')}>Shop</Link></li>
-                        <li><Link to="/about">About</Link></li>
+                        <li><Link to="/about" onClick={handleLinkClick}>About</Link></li>
                         <li><a href="/#contact" onClick={(e) => handleScrollToSection(e, 'contact')}>Contact</a></li>
+
+                        {/* Mobile Only Auth/Settings Links */}
+                        {user ? (
+                            <>
+                                <li className="mobile-only-link"><Link to="/settings" onClick={handleLinkClick}>Profile</Link></li>
+                                <li className="mobile-only-link"><Link to="/orders" onClick={handleLinkClick}>Orders</Link></li>
+                                <li className="mobile-only-link"><button onClick={() => { handleLogout(); handleLinkClick(); }} style={{ fontSize: '1.2rem', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: '500', color: 'var(--text-primary)' }}>Logout</button></li>
+                            </>
+                        ) : (
+                            <li className="mobile-only-link"><Link to="/login" onClick={handleLinkClick}>Sign In</Link></li>
+                        )}
                     </ul>
+
                     <Link to="/" className={`logo nav-item-fade ${isSearchOpen ? 'fade-out' : ''}`}>
                         Crochet Shop.
                     </Link>
+
                     <div className={`nav-actions nav-item-fade ${isSearchOpen ? 'fade-out' : ''}`}>
                         <button type="button" className="icon-btn search-btn" aria-label="Search" onClick={() => setIsSearchOpen(true)}>
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                         </button>
 
                         {user ? (
-                            <div className="settings-menu-container" style={{ position: 'relative' }}>
+                            <div className="settings-menu-container desktop-only-setting" style={{ position: 'relative' }}>
                                 <button className="icon-btn" aria-label="Settings" title="Settings" onClick={() => setIsSettingsOpen(!isSettingsOpen)}>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
                                 </button>
@@ -158,6 +177,14 @@ const Navbar = () => {
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
                             {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
                         </Link>
+
+                        <button className="mobile-menu-btn icon-btn" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} aria-label="Toggle Menu">
+                            {isMobileMenuOpen ? (
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                            ) : (
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                            )}
+                        </button>
                     </div>
 
                     {/* Integrated Navbar Search */}

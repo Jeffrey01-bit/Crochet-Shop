@@ -10,15 +10,16 @@
 }
 
 .navbar.scrolled {
-    background: rgba(253, 251, 249, 0.98);
+    background: #ffffff;
+    /* Solid white */
     padding: 1rem 0;
-    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
-    /* Thin elegant border */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    /* Minimalist soft shadow */
 }
 
 .nav-container {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
+    display: flex;
+    justify-content: space-between;
     align-items: center;
 }
 
@@ -108,9 +109,83 @@
     font-family: var(--font-body);
 }
 
+.mobile-only-link {
+    display: none;
+}
+
+.mobile-menu-btn {
+    display: none;
+    z-index: 2000;
+}
+
 @media (max-width: 768px) {
+    .nav-container {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .mobile-menu-btn {
+        display: block;
+    }
+
+    .mobile-only-link {
+        display: block;
+    }
+
+    .desktop-only-setting {
+        display: none !important;
+        /* Hide settings icon on mobile, using drawer instead */
+    }
+
+    .logo {
+        font-size: 1.25rem;
+        white-space: nowrap;
+    }
+
+    .nav-actions {
+        gap: 0.8rem;
+    }
+
     .nav-links {
-        display: none;
+        position: fixed;
+        top: 0;
+        left: -100%;
+        width: 300px;
+        /* Slightly wider drawer */
+        max-width: 80%;
+        height: 100vh;
+        background: #ffffff;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        /* Left align for a cleaner fashion look */
+        padding-left: 3rem;
+        transition: left 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        /* Smoother slide */
+        box-shadow: 10px 0 30px rgba(0, 0, 0, 0.05);
+        z-index: 1500;
+        gap: 2rem;
+        /* Reduced from 3rem to fit all new settings links */
+    }
+
+    .nav-links.mobile-active {
+        left: 0;
+    }
+
+    .nav-links a,
+    .nav-links button {
+        font-size: 1.2rem;
+        font-family: var(--font-body);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--text-primary);
+        font-weight: 500;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        outline: none;
+        text-align: left;
+        padding: 0;
     }
 }
 
