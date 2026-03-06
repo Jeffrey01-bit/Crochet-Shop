@@ -112,6 +112,12 @@ const Navbar = () => {
                 <div className="container nav-container" style={{ position: 'relative' }}>
 
                     <ul className={`nav-links ${isMobileMenuOpen ? 'mobile-active' : ''} nav-item-fade ${isSearchOpen ? 'fade-out' : ''}`}>
+                        <div className="mobile-menu-header">
+                            <span className="mobile-menu-title">Menu</span>
+                            <button className="close-menu-btn icon-btn" onClick={() => setIsMobileMenuOpen(false)} aria-label="Close Menu">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                            </button>
+                        </div>
                         <li><Link to="/" onClick={() => { handleHomeClick(); handleLinkClick(); }}>Home</Link></li>
                         <li><Link to="/#latest" onClick={(e) => handleScrollToSection(e, 'latest')}>Shop</Link></li>
                         <li><Link to="/about" onClick={handleLinkClick}>About</Link></li>
@@ -120,7 +126,7 @@ const Navbar = () => {
                         {/* Mobile Only Auth/Settings Links */}
                         {user ? (
                             <>
-                                <li className="mobile-only-link"><Link to="/settings" onClick={handleLinkClick}>Profile</Link></li>
+                                <li className="mobile-only-link"><Link to="/settings" onClick={handleLinkClick}>Settings</Link></li>
                                 <li className="mobile-only-link"><Link to="/orders" onClick={handleLinkClick}>Orders</Link></li>
                                 <li className="mobile-only-link"><button onClick={() => { handleLogout(); handleLinkClick(); }} style={{ fontSize: '1.2rem', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: '500', color: 'var(--text-primary)' }}>Logout</button></li>
                             </>
@@ -153,7 +159,7 @@ const Navbar = () => {
                                         <hr />
                                         <Link to="/settings" onClick={() => setIsSettingsOpen(false)}>
                                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
-                                            Profile Details
+                                            Settings
                                         </Link>
                                         <Link to="/orders" onClick={() => setIsSettingsOpen(false)}>
                                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" /><line x1="3" y1="6" x2="21" y2="6" /><path d="M16 10a4 4 0 0 1-8 0" /></svg>
@@ -178,12 +184,8 @@ const Navbar = () => {
                             {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
                         </Link>
 
-                        <button className="mobile-menu-btn icon-btn" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} aria-label="Toggle Menu">
-                            {isMobileMenuOpen ? (
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                            ) : (
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-                            )}
+                        <button className="mobile-menu-btn icon-btn" onClick={() => setIsMobileMenuOpen(true)} aria-label="Open Menu">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
                         </button>
                     </div>
 

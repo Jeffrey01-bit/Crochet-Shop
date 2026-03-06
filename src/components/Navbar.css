@@ -151,21 +151,58 @@
         top: 0;
         left: -100%;
         width: 300px;
-        /* Slightly wider drawer */
         max-width: 80%;
         height: 100vh;
         background: #ffffff;
         flex-direction: column;
-        justify-content: center;
-        align-items: flex-start;
-        /* Left align for a cleaner fashion look */
-        padding-left: 3rem;
+        justify-content: flex-start;
+        align-items: stretch;
+        padding: 0;
         transition: left 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        /* Smoother slide */
         box-shadow: 10px 0 30px rgba(0, 0, 0, 0.05);
         z-index: 1500;
-        gap: 2rem;
-        /* Reduced from 3rem to fit all new settings links */
+        gap: 0;
+    }
+
+    .mobile-menu-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.5rem 2rem;
+        background: #faf8f5;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        margin-bottom: 0.5rem;
+    }
+
+    .mobile-menu-title {
+        font-family: var(--font-heading);
+        font-size: 1.1rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: var(--text-primary);
+    }
+
+    .close-menu-btn {
+        background: transparent;
+        border: none;
+        color: var(--text-primary);
+        cursor: pointer;
+        display: flex;
+        padding: 5px;
+        transition: transform 0.2s ease;
+    }
+
+    .close-menu-btn:hover {
+        transform: rotate(90deg);
+    }
+
+    .nav-links li {
+        width: 100%;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+    }
+
+    .nav-links li:last-child {
+        border-bottom: none;
     }
 
     .nav-links.mobile-active {
@@ -174,7 +211,9 @@
 
     .nav-links a,
     .nav-links button {
-        font-size: 1.2rem;
+        display: block;
+        width: 100%;
+        font-size: 1.1rem;
         font-family: var(--font-body);
         text-transform: uppercase;
         letter-spacing: 1px;
@@ -185,7 +224,13 @@
         cursor: pointer;
         outline: none;
         text-align: left;
-        padding: 0;
+        padding: 1.2rem 2rem;
+        transition: background 0.2s;
+    }
+
+    .nav-links a:hover,
+    .nav-links button:hover {
+        background: rgba(0, 0, 0, 0.02);
     }
 }
 

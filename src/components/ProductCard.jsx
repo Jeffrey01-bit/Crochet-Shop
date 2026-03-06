@@ -9,8 +9,34 @@ const ProductCard = ({ product, showActions = false }) => {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [isHovering, setIsHovering] = useState(false);
     const [isManual, setIsManual] = useState(false);
+    const [slideDirection, setSlideDirection] = useState('none');
     const [addStatus, setAddStatus] = useState('idle'); // 'idle' | 'loading' | 'added'
     const { isInCart } = useCart();
+
+    const [touchStart, setTouchStart] = useState(null);
+    const [touchEnd, setTouchEnd] = useState(null);
+    const minSwipeDistance = 40;
+
+    const onTouchStart = (e) => {
+        setTouchEnd(null);
+        setTouchStart(e.targetTouches[0].clientX);
+    };
+
+    const onTouchMove = (e) => setTouchEnd(e.targetTouches[0].clientX);
+
+    const onTouchEnd = (e) => {
+        if (!touchStart || !touchEnd) return;
+        const distance = touchStart - touchEnd;
+        const isLeftSwipe = distance > minSwipeDistance;
+        const isRightSwipe = distance < -minSwipeDistance;
+
+        if (isLeftSwipe) {
+            handleNextImage(e);
+        }
+        if (isRightSwipe) {
+            handlePrevImage(e);
+        }
+    };
 
     const isProductInCart = isInCart(product.id);
 
@@ -18,9 +44,11 @@ const ProductCard = ({ product, showActions = false }) => {
         let interval;
         if (isHovering && !isManual && product.images && product.images.length > 1) {
             interval = setInterval(() => {
+                setSlideDirection('left');
                 setCurrentImageIndex((prevIndex) =>
                     (prevIndex + 1) % product.images.length
                 );
+                setTimeout(() => setSlideDirection('none'), 300);
             }, 1500); // Change image every 1.5 seconds
         } else if (!isHovering) {
             setCurrentImageIndex(0); // Reset to first image when not hovering
@@ -37,7 +65,9 @@ const ProductCard = ({ product, showActions = false }) => {
         e.stopPropagation();
         if (!product.images || product.images.length <= 1) return;
         setIsManual(true);
+        setSlideDirection('left');
         setCurrentImageIndex((prev) => (prev + 1) % product.images.length);
+        setTimeout(() => setSlideDirection('none'), 300);
     };
 
     const handlePrevImage = (e) => {
@@ -45,7 +75,9 @@ const ProductCard = ({ product, showActions = false }) => {
         e.stopPropagation();
         if (!product.images || product.images.length <= 1) return;
         setIsManual(true);
+        setSlideDirection('right');
         setCurrentImageIndex((prev) => (prev - 1 + product.images.length) % product.images.length);
+        setTimeout(() => setSlideDirection('none'), 300);
     };
 
     const handleDotClick = (e, index) => {
@@ -110,10 +142,20 @@ const ProductCard = ({ product, showActions = false }) => {
                 onMouseEnter={() => setIsHovering(true)}
                 onMouseLeave={() => setIsHovering(false)}
             >
-                <div className="product-image-container">
+                <div
+                    className="product-image-container"
+                    onTouchStart={onTouchStart}
+                    onTouchMove={onTouchMove}
+                    onTouchEnd={onTouchEnd}
+                >
                     {displayImage ? (
                         <>
-                            <img src={displayImage} alt={product.name} className="product-image" />
+                            <img
+                                key={currentImageIndex}
+                                src={displayImage}
+                                alt={product.name}
+                                className={`product-image ${slideDirection !== 'none' ? `slide-${slideDirection}` : ''}`}
+                            />
                             {isHovering && product.images && product.images.length > 1 && (
                                 <>
                                     <div className="image-slider-controls">

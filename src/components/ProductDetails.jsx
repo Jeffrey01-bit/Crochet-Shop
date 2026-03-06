@@ -24,15 +24,41 @@ const ProductDetails = () => {
 
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+    const [slideDirection, setSlideDirection] = useState('none');
+
+    const [touchStart, setTouchStart] = useState(null);
+    const [touchEnd, setTouchEnd] = useState(null);
+    const minSwipeDistance = 50;
+
+    const onTouchStart = (e) => {
+        setTouchEnd(null);
+        setTouchStart(e.targetTouches[0].clientX);
+    };
+
+    const onTouchMove = (e) => setTouchEnd(e.targetTouches[0].clientX);
+
+    const onTouchEnd = () => {
+        if (!touchStart || !touchEnd) return;
+        const distance = touchStart - touchEnd;
+        const isLeftSwipe = distance > minSwipeDistance;
+        const isRightSwipe = distance < -minSwipeDistance;
+
+        if (isLeftSwipe) handleNextImage();
+        if (isRightSwipe) handlePrevImage();
+    };
 
     const handleNextImage = () => {
         if (!product.images) return;
+        setSlideDirection('left');
         setCurrentImageIndex((prev) => (prev + 1) % product.images.length);
+        setTimeout(() => setSlideDirection('none'), 300);
     };
 
     const handlePrevImage = () => {
         if (!product.images) return;
+        setSlideDirection('right');
         setCurrentImageIndex((prev) => (prev - 1 + product.images.length) % product.images.length);
+        setTimeout(() => setSlideDirection('none'), 300);
     };
 
     const displayImage = product.images && product.images.length > 0
@@ -223,9 +249,20 @@ const ProductDetails = () => {
                 <div className="product-details-grid">
                     {/* Image Gallery Column - Reverted to Carousel/Lightbox */}
                     <div className="product-gallery">
-                        <div className="main-image-container" onClick={() => setIsLightboxOpen(true)}>
+                        <div
+                            className="main-image-container"
+                            onClick={() => setIsLightboxOpen(true)}
+                            onTouchStart={onTouchStart}
+                            onTouchMove={onTouchMove}
+                            onTouchEnd={onTouchEnd}
+                        >
                             {displayImage ? (
-                                <img src={displayImage} alt={product.name} className="main-image" />
+                                <img
+                                    key={`main-${currentImageIndex}`}
+                                    src={displayImage}
+                                    alt={product.name}
+                                    className={`main-image ${slideDirection !== 'none' ? `slide-${slideDirection}` : ''}`}
+                                />
                             ) : (
                                 <div className="placeholder-image">Image not available</div>
                             )}
@@ -262,28 +299,6 @@ const ProductDetails = () => {
 
                         <div className="details-divider"></div>
 
-                        <div className="details-description">
-                            <h3>Description</h3>
-                            <p>{product.description}</p>
-                        </div>
-
-                        <div className="details-features">
-                            <ul style={{ listStyleType: 'none', padding: 0 }}>
-                                <li style={{ marginBottom: '10px', display: 'flex', alignItems: 'center' }}>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '12px', color: 'var(--text-secondary)' }}><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" /></svg>
-                                    100% Handmade with premium yarn
-                                </li>
-                                <li style={{ marginBottom: '10px', display: 'flex', alignItems: 'center' }}>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '12px', color: 'var(--text-secondary)' }}><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12" /></svg>
-                                    Aesthetic, breathable and comfortable
-                                </li>
-                                <li style={{ marginBottom: '10px', display: 'flex', alignItems: 'center' }}>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '12px', color: 'var(--text-secondary)' }}><circle cx="13.5" cy="6.5" r=".5" /><circle cx="17.5" cy="10.5" r=".5" /><circle cx="8.5" cy="7.5" r=".5" /><circle cx="6.5" cy="12.5" r=".5" /><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z" /></svg>
-                                    Unique artisanal design
-                                </li>
-                            </ul>
-                        </div>
-
                         <div className="details-actions">
                             {isProductInCart ? (
                                 <button className="btn-add-to-cart btn-secondary added" disabled style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -317,6 +332,28 @@ const ProductDetails = () => {
                             </button>
                         </div>
 
+                        <div className="details-description">
+                            <h3>Description</h3>
+                            <p>{product.description}</p>
+                        </div>
+
+                        <div className="details-features">
+                            <ul style={{ listStyleType: 'none', padding: 0 }}>
+                                <li style={{ marginBottom: '10px', display: 'flex', alignItems: 'center' }}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '12px', color: 'var(--text-secondary)' }}><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" /></svg>
+                                    100% Handmade with premium yarn
+                                </li>
+                                <li style={{ marginBottom: '10px', display: 'flex', alignItems: 'center' }}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '12px', color: 'var(--text-secondary)' }}><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12" /></svg>
+                                    Aesthetic, breathable and comfortable
+                                </li>
+                                <li style={{ marginBottom: '10px', display: 'flex', alignItems: 'center' }}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '12px', color: 'var(--text-secondary)' }}><circle cx="13.5" cy="6.5" r=".5" /><circle cx="17.5" cy="10.5" r=".5" /><circle cx="8.5" cy="7.5" r=".5" /><circle cx="6.5" cy="12.5" r=".5" /><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z" /></svg>
+                                    Unique artisanal design
+                                </li>
+                            </ul>
+                        </div>
+
                         <div className="shipping-info">
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="16" height="16" x="4" y="4" rx="2" /><path d="M8 8h.01" /><path d="M8 12h.01" /><path d="M8 16h.01" /><path d="M12 16h.01" /><path d="M16 16h.01" /><path d="M16 12h.01" /><path d="M16 8h.01" /><path d="M12 8h.01" /><path d="M12 12h.01" /></svg>
                             <p>For shipment and delivery information, kindly contact us directly.</p>
@@ -332,9 +369,20 @@ const ProductDetails = () => {
             {/* Lightbox */}
             {isLightboxOpen && (
                 <div className="lightbox-overlay" onClick={() => setIsLightboxOpen(false)}>
-                    <div className="lightbox-content" onClick={e => e.stopPropagation()}>
+                    <div
+                        className="lightbox-content"
+                        onClick={e => e.stopPropagation()}
+                        onTouchStart={onTouchStart}
+                        onTouchMove={onTouchMove}
+                        onTouchEnd={onTouchEnd}
+                    >
                         <button className="lightbox-close" onClick={() => setIsLightboxOpen(false)}>✕</button>
-                        <img src={displayImage} alt={product.name} className="lightbox-image" />
+                        <img
+                            key={`lightbox-${currentImageIndex}`}
+                            src={displayImage}
+                            alt={product.name}
+                            className={`lightbox-image ${slideDirection !== 'none' ? `slide-${slideDirection}` : ''}`}
+                        />
                         {product.images && product.images.length > 1 && (
                             <>
                                 <button className="lightbox-nav-btn prev" onClick={handlePrevImage}>❮</button>

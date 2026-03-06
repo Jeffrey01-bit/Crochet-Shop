@@ -69,7 +69,7 @@ const Settings = () => {
     if (!user) return null;
 
     return (
-        <section className="settings-section section-padding">
+        <section className="settings-section">
             <div className="container settings-container glass-panel">
                 <div className="settings-sidebar">
                     <h3>Settings</h3>

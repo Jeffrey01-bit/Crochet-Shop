@@ -1,16 +1,15 @@
 .settings-section {
     min-height: calc(100vh - 80px);
     /* accounting for navbar */
-    padding-top: 140px;
+    padding-top: calc(var(--nav-height, 80px) + 2rem);
     padding-bottom: 60px;
     background: var(--bg-primary);
-    display: flex;
-    justify-content: center;
 }
 
 .settings-container {
     width: 100%;
     max-width: 1000px;
+    margin: 0 auto;
     display: grid;
     grid-template-columns: 260px 1fr;
     gap: 0;
