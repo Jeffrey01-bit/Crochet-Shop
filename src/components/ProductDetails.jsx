@@ -319,7 +319,7 @@ const ProductDetails = () => {
 
                         <div className="shipping-info">
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="16" height="16" x="4" y="4" rx="2" /><path d="M8 8h.01" /><path d="M8 12h.01" /><path d="M8 16h.01" /><path d="M12 16h.01" /><path d="M16 16h.01" /><path d="M16 12h.01" /><path d="M16 8h.01" /><path d="M12 8h.01" /><path d="M12 12h.01" /></svg>
-                            <p>Ships within 3-5 business days.</p>
+                            <p>For shipment and delivery information, kindly contact us directly.</p>
                         </div>
                     </div>
                 </div>
